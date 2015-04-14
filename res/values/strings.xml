@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">CalendarView</string>
+    <string name="monday">Пн</string>
+    <string name="tuesday">Пн</string>
+    <string name="wednesday">Пн</string>
+    <string name="thursday">Пн</string>
+    <string name="friday">Пн</string>
+    <string name="saturday">Пн</string>
+    <string name="sunday">Пн</string>
+
+</resources>

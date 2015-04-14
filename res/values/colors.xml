@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="no_current_month">#dfdfdf</color>
+    <color name="current_month_before_current_day">#b1b1b1</color>
+    <color name="current_month_after_current_day">#585858</color>
+    <color name="current_month_current_day">#e88484</color>    
+</resources>
