@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CalendarView">
+       <attr name="swipeEnable" format="boolean"/>
+       <attr name="cellStyle" format="reference"/>
+       <attr name="dayCellBackround" format="reference"></attr>
+       
+       <attr name="titleColor" format="reference"/>
+       <attr name="noCurrentMonthColor" format="reference"/>
+       <attr name="currentDayColor" format="reference"/>
+       <attr name="futureDaysColor" format="reference"/>
+       <attr name="previousDaysColor" format="reference"/>
+   </declare-styleable>
+</resources>

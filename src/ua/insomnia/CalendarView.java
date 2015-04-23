@@ -7,9 +7,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import ua.insomnia.calendarview.R;
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -19,22 +18,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CalendarView extends LinearLayout implements OnSwipeListener {
-	
+
 	public static final String TAG = "CalendarView";
 
-	private boolean DEBUG = true;
-	private boolean swipeEnable = true;
+	private boolean DEBUG = false;
+	private boolean swipeEnable = false;
 	private GestureDetector detector;
 	private OnMonthChange monthListener;
 
-	private int colorNoCurrentMonth = getResources().getColor(
-			R.color.no_current_month);
-	private int colorCurrentMonthBeforCurrentDay = getResources().getColor(
-			R.color.current_month_before_current_day);
-	private int colorCurrentMonthAfterCurrentDay = getResources().getColor(
-			R.color.current_month_after_current_day);
-	private int colorCurrentMonthCurrentDay = getResources().getColor(
-			R.color.current_month_current_day);
+	//private int defaultDayCellBackround = R.drawable.default_backround; 
+	private int defaultCellStyle = R.style.CalendarViewCell;
+	private int defaultTitleColor = R.color.default_title_color;
+	private int defaultNoCurrentMonthColor = R.color.default_no_current_month;
+	private int defaultPreviousDaysColor = R.color.default_previous_day;
+	private int defaultFutureDaysColor = R.color.default_future_day;
+	private int defaultCurrentDayColor = R.color.default_current_day;
+
+	//private int dayCellBackround = 0;
+	private int cellStyle = 0;
+	private int titleColor = 0;
+	private int noCurrentMonthColor = 0;
+	private int previousDaysColor = 0;
+	private int futureDaysColor = 0;
+	private int currentDayColor = 0;
 
 	private static final int CELL_IN_ROW = 7;
 	private static final int ROW_COUNT = 7;
@@ -54,15 +60,16 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 
 	public CalendarView(Context context) {
 		super(context);
+		initFromAttrs(null);
 		initCalendars();
 		initCalendarView();
 		initTitles();
 		init();
 	}
 
-	@SuppressLint("NewApi")
 	public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+		initFromAttrs(attrs);
 		initCalendars();
 		initCalendarView();
 		initTitles();
@@ -71,10 +78,52 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 
 	public CalendarView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		initFromAttrs(attrs);
 		initCalendars();
 		initCalendarView();
 		initTitles();
 		init();
+	}
+
+	private void initFromAttrs(AttributeSet attrs) {
+		if (attrs != null) {
+			TypedArray a = getContext().obtainStyledAttributes(attrs,
+					R.styleable.CalendarView);
+			
+			swipeEnable = a.getBoolean(R.styleable.CalendarView_swipeEnable,
+					false);
+			
+			cellStyle = a.getResourceId(R.styleable.CalendarView_cellStyle, defaultCellStyle);
+			//dayCellBackround = a.getResourceId(R.styleable.CalendarView_dayCellBackround, defaultDayCellBackround);
+
+			int colorResId = 0;
+
+			colorResId = a.getResourceId(R.styleable.CalendarView_titleColor,
+					defaultTitleColor);
+			titleColor = getResources().getColor(colorResId);
+
+			colorResId = a.getResourceId(
+					R.styleable.CalendarView_currentDayColor,
+					defaultCurrentDayColor);
+			currentDayColor = getResources().getColor(colorResId);
+
+			colorResId = a.getResourceId(
+					R.styleable.CalendarView_previousDaysColor,
+					defaultPreviousDaysColor);
+			previousDaysColor = getResources().getColor(colorResId);
+
+			colorResId = a.getResourceId(
+					R.styleable.CalendarView_futureDaysColor,
+					defaultFutureDaysColor);
+			futureDaysColor = getResources().getColor(colorResId);
+
+			colorResId = a.getResourceId(
+					R.styleable.CalendarView_noCurrentMonthColor,
+					defaultNoCurrentMonthColor);
+			noCurrentMonthColor = getResources().getColor(colorResId);
+
+			a.recycle();
+		}
 	}
 
 	private void init() {
@@ -95,7 +144,7 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 		for (int i = startIndex; i < endIndex; i++) {
 			TextView tw = cellArray.get(i);
 			tw.setText(String.valueOf(daysCount));
-			tw.setTextColor(colorNoCurrentMonth);
+			tw.setTextColor(noCurrentMonthColor);
 			int month = previous.get(Calendar.MONTH);
 			int year = previous.get(Calendar.YEAR);
 			setTagTo(tw, daysCount, month, year);
@@ -118,16 +167,16 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 			int localColor;
 
 			if (isBeforeNow())
-				localColor = colorCurrentMonthBeforCurrentDay;
+				localColor = previousDaysColor;
 			else if (isAfterNow())
-				localColor = colorCurrentMonthAfterCurrentDay;
+				localColor = futureDaysColor;
 			else {
 				if (daysCount < currentDay)
-					localColor = colorCurrentMonthBeforCurrentDay;
+					localColor = previousDaysColor;
 				else if (daysCount == currentDay)
-					localColor = colorCurrentMonthCurrentDay;
+					localColor = currentDayColor;
 				else
-					localColor = colorCurrentMonthAfterCurrentDay;
+					localColor = futureDaysColor;
 			}
 
 			tw.setTextColor(localColor);
@@ -150,7 +199,7 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 		for (int i = startIndex; i < endIndex; i++) {
 			TextView tw = cellArray.get(i);
 			tw.setText(String.valueOf(daysCount));
-			tw.setTextColor(colorNoCurrentMonth);
+			tw.setTextColor(noCurrentMonthColor);
 			int month = next.get(Calendar.MONTH);
 			int year = next.get(Calendar.YEAR);
 			setTagTo(tw, daysCount, month, year);
@@ -235,6 +284,7 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 
 		for (int i = 0; i < CELL_IN_ROW; i++) {
 			TextView tw = cellArray.get(i);
+			tw.setTextColor(titleColor);
 			tw.setText(dayNames[i]);
 		}
 	}
@@ -259,7 +309,6 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 			next.add(Calendar.MONTH, 1);
 	}
 
-	@SuppressLint("NewApi")
 	private void initCalendarView() {
 
 		this.setOrientation(LinearLayout.VERTICAL);
@@ -276,6 +325,8 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 			LinearLayout row = (LinearLayout) this.getChildAt(i);
 			for (int j = 0; j < row.getChildCount(); j++) {
 				TextView tw = (TextView) row.getChildAt(j);
+				tw.setTextAppearance(getContext(), cellStyle);
+				//tw.setBackgroundResource(dayCellBackround);
 				tw.setOnTouchListener(new OnTouchListener() {
 
 					@Override
@@ -284,41 +335,41 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 						return false;
 					}
 				});
-
 				cellArray.add(tw);
 			}
 		}
 	}
-
+	
 	private LinearLayout createRow() {
 		LinearLayout row = (LinearLayout) View.inflate(getContext(),
 				R.layout.row, null);
 		return row;
 	}
-	
+
 	private boolean isBeforeNow() {
 		if (current.before(now))
 			return true;
 		return false;
 	}
-	
-	private boolean isAfterNow(){
+
+	private boolean isAfterNow() {
 		if (current.after(now))
 			return true;
 		return false;
 	}
 
-	private boolean isNow() {
-		if (current.compareTo(now) == 0)
-			return true;
-		else
-			return false;
-	}
-
 	public void setCurrentCalendar(Calendar calendar) {
-		current = calendar;
-		initCalendars();
-		init();
+
+		if (current.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
+				&& current.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)
+				&& current.get(Calendar.DATE) == calendar.get(Calendar.DATE)) {
+			Log.d(TAG, "current == calendar");
+		} else {
+			Log.d(TAG, "current != calendar");
+			current = calendar;
+			initCalendars();
+			init();
+		}
 	}
 
 	public Calendar getCurrentCalendar() {
@@ -333,7 +384,6 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 		return next;
 	}
 
-	@SuppressLint("NewApi")
 	public String getCurrentMonth() {
 		String format = "LLLL";
 		SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
@@ -343,7 +393,7 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 
 	@Override
 	public void onSwipeLeft() {
-		
+
 		if (swipeEnable) {
 			if (DEBUG)
 				Log.d(TAG, "onSwipeLeft. month - " + getCurrentMonth());
@@ -357,7 +407,7 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 
 	@Override
 	public void onSwipeRight() {
-		
+
 		if (swipeEnable) {
 			if (DEBUG)
 				Log.d(TAG, "onSwipeRight. month - " + getCurrentMonth());
@@ -371,6 +421,45 @@ public class CalendarView extends LinearLayout implements OnSwipeListener {
 
 	public void setOnMonthListener(OnMonthChange monthListener) {
 		this.monthListener = monthListener;
+	}
+
+	public void setSwipeEnable(boolean swipeEnable) {
+		this.swipeEnable = swipeEnable;
+	}
+	
+	public boolean isSwipeEnable() {
+		return this.swipeEnable;
+	}
+	
+	/**
+	 * To use the default color set an option to -1
+	 * 
+	 * @param c1  titleColor
+	 * @param c2  noCurrentMonthColor
+	 * @param c3  previousDaysColor
+	 * @param c4  futureDaysColor
+	 * @param c5  currentDayColor
+	 *
+	 */
+	public void setColorScheme(int c1, int c2, int c3, int c4, int c5) {
+		if (c1 != -1) {
+			titleColor = c1;
+			initTitles();
+		}
+		if (c2 != -1)
+			noCurrentMonthColor = c2;
+		if (c3 != -1)
+			previousDaysColor = c3;
+		if (c4 != -1)
+			futureDaysColor = c4;
+		if (c5 != -1)
+			currentDayColor = c5;
+		init();
+	}
+	
+	public void setCellStyle(int resId) {
+		for (TextView tw: cellArray)
+			tw.setTextAppearance(getContext(), resId);
 	}
 
 }

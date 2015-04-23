@@ -4,67 +4,18 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="00"
-        android:textStyle="bold" />
+    <TextView style="@style/CalendarViewCell" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="00"
-        android:textStyle="bold" />
+    <TextView style="@style/CalendarViewCell" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="00"
-        android:textStyle="bold" />
+    <TextView style="@style/CalendarViewCell" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="00"
-        android:textStyle="bold" />
+    <TextView style="@style/CalendarViewCell" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="00"
-        android:textStyle="bold" />
+    <TextView style="@style/CalendarViewCell" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="00"
-        android:textStyle="bold" />
+    <TextView style="@style/CalendarViewCell" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="00"
-        android:textStyle="bold" />
+    <TextView style="@style/CalendarViewCell" />
 
 </LinearLayout>
